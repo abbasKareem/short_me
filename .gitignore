@@ -1,0 +1,48 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode user-specific settings
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# Xcode build products
+build/
+DerivedData/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM
+*.dSYM.zip
+
+# Swift Package Manager
+.build/
+.swiftpm/xcode/package.xcworkspace/xcuserdata/
+
+# Dependency-manager build products
+Carthage/Build/
+Pods/
+
+# Playground generated files
+timeline.xctimeline
+playground.xcworkspace
+
+# Test and coverage output
+*.xcresult
+coverage/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Editor and temporary files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/

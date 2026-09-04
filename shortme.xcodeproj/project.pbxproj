@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		AB000000000000000000000B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 056B5F60304AD7B7008B4CA7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 056B5F67304AD7B7008B4CA7;
+			remoteInfo = shortme;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		056B5F68304AD7B7008B4CA7 /* shortme.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = shortme.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000001 /* shortmeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = shortmeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +27,22 @@
 			path = shortme;
 			sourceTree = "<group>";
 		};
+		A20000000000000000000002 /* shortmeTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = shortmeTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		056B5F65304AD7B7008B4CA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A50000000000000000000005 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				056B5F6A304AD7B7008B4CA7 /* shortme */,
+				A20000000000000000000002 /* shortmeTests */,
 				056B5F69304AD7B7008B4CA7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				056B5F68304AD7B7008B4CA7 /* shortme.app */,
+				A10000000000000000000001 /* shortmeTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +95,29 @@
 			productReference = 056B5F68304AD7B7008B4CA7 /* shortme.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A30000000000000000000003 /* shortmeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A70000000000000000000007 /* Build configuration list for PBXNativeTarget "shortmeTests" */;
+			buildPhases = (
+				A40000000000000000000004 /* Sources */,
+				A50000000000000000000005 /* Frameworks */,
+				A60000000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA000000000000000000000A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				A20000000000000000000002 /* shortmeTests */,
+			);
+			name = shortmeTests;
+			packageProductDependencies = (
+			);
+			productName = shortmeTests;
+			productReference = A10000000000000000000001 /* shortmeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -81,6 +129,9 @@
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					056B5F67304AD7B7008B4CA7 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					A30000000000000000000003 = {
 						CreatedOnToolsVersion = 26.6;
 					};
 				};
@@ -100,12 +151,20 @@
 			projectRoot = "";
 			targets = (
 				056B5F67304AD7B7008B4CA7 /* shortme */,
+				A30000000000000000000003 /* shortmeTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		056B5F66304AD7B7008B4CA7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A60000000000000000000006 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +181,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A40000000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA000000000000000000000A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 056B5F67304AD7B7008B4CA7 /* shortme */;
+			targetProxy = AB000000000000000000000B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		056B5F73304AD7B9008B4CA7 /* Debug */ = {
@@ -250,21 +324,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = NDDGDWAPR2;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.morabaa.shortme.shortme;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -282,21 +359,24 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = NDDGDWAPR2;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.morabaa.shortme.shortme;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -306,6 +386,43 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A80000000000000000000008 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = NDDGDWAPR2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.morabaa.shortme.shortmeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/shortme.app/Contents/MacOS/shortme";
+			};
+			name = Debug;
+		};
+		A90000000000000000000009 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = NDDGDWAPR2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.morabaa.shortme.shortmeTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/shortme.app/Contents/MacOS/shortme";
 			};
 			name = Release;
 		};
@@ -326,6 +443,15 @@
 			buildConfigurations = (
 				056B5F76304AD7B9008B4CA7 /* Debug */,
 				056B5F77304AD7B9008B4CA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A70000000000000000000007 /* Build configuration list for PBXNativeTarget "shortmeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A80000000000000000000008 /* Debug */,
+				A90000000000000000000009 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
