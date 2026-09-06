@@ -2,11 +2,10 @@ import AppKit
 import SwiftUI
 
 @MainActor
-final class FloatingButtonHostingView: NSHostingView<FloatingButtonView>, NSMenuDelegate {
+final class FloatingButtonHostingView: NSHostingView<FloatingButtonView> {
     var onClick: (() -> Void)?
     var onDragEnded: (() -> Void)?
     var onDragBegan: (() -> Void)?
-    var contextMenuProvider: (() -> NSMenu)?
 
     private let visualState: FloatingButtonVisualState
     private var trackingAreaReference: NSTrackingArea?
@@ -14,9 +13,21 @@ final class FloatingButtonHostingView: NSHostingView<FloatingButtonView>, NSMenu
     private var windowOriginAtMouseDown = CGPoint.zero
     private var didDrag = false
 
-    init(state: FloatingButtonVisualState) {
+    init(
+        state: FloatingButtonVisualState,
+        manageGroups: @escaping () -> Void,
+        resetPosition: @escaping () -> Void,
+        showAbout: @escaping () -> Void,
+        quit: @escaping () -> Void
+    ) {
         visualState = state
-        super.init(rootView: FloatingButtonView(state: state))
+        super.init(rootView: FloatingButtonView(
+            state: state,
+            manageGroups: manageGroups,
+            resetPosition: resetPosition,
+            showAbout: showAbout,
+            quit: quit
+        ))
     }
 
     @available(*, unavailable)
@@ -94,14 +105,4 @@ final class FloatingButtonHostingView: NSHostingView<FloatingButtonView>, NSMenu
         didDrag = false
     }
 
-    override func rightMouseDown(with event: NSEvent) {
-        guard let menu = contextMenuProvider?() else { return }
-        visualState.isContextMenuOpen = true
-        menu.delegate = self
-        NSMenu.popUpContextMenu(menu, with: event, for: self)
-    }
-
-    func menuDidClose(_ menu: NSMenu) {
-        visualState.isContextMenuOpen = false
-    }
 }

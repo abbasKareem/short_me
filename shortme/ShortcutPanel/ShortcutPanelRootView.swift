@@ -10,6 +10,9 @@ struct ShortcutPanelRootView: View {
     let manageGroups: () -> Void
     let preferredHeightChanged: (CGFloat) -> Void
 
+    @State private var highlightedGroupID: UUID?
+    @State private var highlightedItemID: UUID?
+
     private var selectedGroup: ShortcutGroup? {
         guard let selectedGroupID = appState.selectedGroupID else { return nil }
         return groups.first { $0.id == selectedGroupID }
@@ -36,10 +39,12 @@ struct ShortcutPanelRootView: View {
                 ShortcutListView(
                     group: group,
                     searchQuery: $appState.searchQuery,
+                    highlightedItemID: $highlightedItemID,
                     goBack: {
                         withAnimation(.easeInOut(duration: 0.16)) {
                             appState.selectedGroupID = nil
                             appState.searchQuery = ""
+                            highlightedItemID = nil
                         }
                     }
                 )
@@ -47,8 +52,11 @@ struct ShortcutPanelRootView: View {
             } else {
                 GroupListView(
                     groups: groups,
+                    highlightedGroupID: $highlightedGroupID,
                     openGroup: { groupID in
                         withAnimation(.easeInOut(duration: 0.16)) {
+                            highlightedGroupID = groupID
+                            highlightedItemID = nil
                             appState.selectedGroupID = groupID
                         }
                     },
@@ -66,6 +74,11 @@ struct ShortcutPanelRootView: View {
         }
         .clipShape(RoundedRectangle(cornerRadius: 15, style: .continuous))
         .onAppear { preferredHeightChanged(preferredHeight) }
+        .onChange(of: appState.isShortcutPanelVisible) { _, isVisible in
+            guard isVisible else { return }
+            highlightedGroupID = groups.first?.id
+            highlightedItemID = nil
+        }
         .onChange(of: preferredHeight) { _, newHeight in
             preferredHeightChanged(newHeight)
         }
@@ -73,6 +86,7 @@ struct ShortcutPanelRootView: View {
             if appState.selectedGroupID != nil, selectedGroup == nil {
                 appState.selectedGroupID = nil
                 appState.searchQuery = ""
+                highlightedItemID = nil
             }
         }
         .onExitCommand {
@@ -81,6 +95,7 @@ struct ShortcutPanelRootView: View {
             } else {
                 appState.selectedGroupID = nil
                 appState.searchQuery = ""
+                highlightedItemID = nil
             }
         }
     }

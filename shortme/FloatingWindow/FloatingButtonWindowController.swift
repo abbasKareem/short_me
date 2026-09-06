@@ -58,7 +58,13 @@ final class FloatingButtonWindowController: NSWindowController {
     }
 
     private func configureContent() {
-        let hostingView = FloatingButtonHostingView(state: visualState)
+        let hostingView = FloatingButtonHostingView(
+            state: visualState,
+            manageGroups: { [weak self] in self?.manageGroups() },
+            resetPosition: { [weak self] in self?.resetPosition() },
+            showAbout: { [weak self] in self?.showAbout() },
+            quit: { [weak self] in self?.quit() }
+        )
         hostingView.onClick = { [weak self] in
             guard let self else { return }
             shortcutPanelController.toggle()
@@ -69,9 +75,6 @@ final class FloatingButtonWindowController: NSWindowController {
         }
         hostingView.onDragEnded = { [weak self] in
             self?.savePosition()
-        }
-        hostingView.contextMenuProvider = { [weak self] in
-            self?.makeContextMenu() ?? NSMenu()
         }
         window?.contentView = hostingView
 
@@ -116,31 +119,16 @@ final class FloatingButtonWindowController: NSWindowController {
         positionStore.save(frame: clamped, on: screen)
     }
 
-    private func makeContextMenu() -> NSMenu {
-        let menu = NSMenu()
-        menu.addItem(withTitle: "Manage Groups", action: #selector(showManageGroups), keyEquivalent: "")
-        menu.addItem(withTitle: "Reset Floating Button Position", action: #selector(resetPosition), keyEquivalent: "")
-        menu.addItem(withTitle: "About Shortme", action: #selector(showAbout), keyEquivalent: "")
-        menu.addItem(.separator())
-        menu.addItem(withTitle: "Quit Shortme", action: #selector(quit), keyEquivalent: "q")
-        menu.items.forEach { $0.target = self }
-        return menu
-    }
-
-    @objc private func showManageGroups() {
-        manageGroups()
-    }
-
-    @objc private func resetPosition() {
+    private func resetPosition() {
         positionStore.reset()
         moveToDefaultPosition()
     }
 
-    @objc private func showAbout() {
+    private func showAbout() {
         NSApplication.shared.orderFrontStandardAboutPanel(nil)
     }
 
-    @objc private func quit() {
+    private func quit() {
         NSApplication.shared.terminate(nil)
     }
 }

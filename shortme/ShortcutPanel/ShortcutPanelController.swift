@@ -14,6 +14,7 @@ final class ShortcutPanelController: NSWindowController {
     var buttonFrameProvider: (() -> CGRect?)?
     var onVisibilityChange: ((Bool) -> Void)?
     var isVisible: Bool { window?.isVisible == true }
+    var isFocused: Bool { window?.isKeyWindow == true }
 
     init(
         modelContainer: ModelContainer,
@@ -66,6 +67,14 @@ final class ShortcutPanelController: NSWindowController {
 
     func toggle() {
         isVisible ? close() : show()
+    }
+
+    func focusOrShow() {
+        if isVisible {
+            window?.makeKeyAndOrderFront(nil)
+        } else {
+            show()
+        }
     }
 
     func show() {

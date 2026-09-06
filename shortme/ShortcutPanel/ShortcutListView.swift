@@ -6,15 +6,22 @@ struct ShortcutListView: View {
     @Environment(\.modelContext) private var modelContext
     let group: ShortcutGroup
     @Binding var searchQuery: String
+    @Binding var highlightedItemID: UUID?
     let goBack: () -> Void
 
     @FocusState private var focusedItemID: UUID?
     @State private var drafts: [ShortcutDraft]
     @State private var errorMessage: String?
 
-    init(group: ShortcutGroup, searchQuery: Binding<String>, goBack: @escaping () -> Void) {
+    init(
+        group: ShortcutGroup,
+        searchQuery: Binding<String>,
+        highlightedItemID: Binding<UUID?>,
+        goBack: @escaping () -> Void
+    ) {
         self.group = group
         _searchQuery = searchQuery
+        _highlightedItemID = highlightedItemID
         self.goBack = goBack
         _drafts = State(initialValue: Self.makeDrafts(from: group))
     }
@@ -53,6 +60,7 @@ struct ShortcutListView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
+                .keyboardShortcut("+", modifiers: .command)
                 .accessibilityLabel("Add Item")
             }
             .padding(.horizontal, 10)
@@ -72,22 +80,45 @@ struct ShortcutListView: View {
             } else if filteredDrafts.isEmpty {
                 EmptyStateView(title: "No items found")
             } else {
-                ScrollView {
-                    LazyVStack(spacing: 0) {
-                        ForEach(filteredDrafts) { draft in
-                            ShortcutRowView(
-                                draft: draftBinding(for: draft),
-                                showsShortcut: group.groupType == .shortcuts,
-                                focusedItem: $focusedItemID,
-                                delete: { deleteItem(id: draft.id) }
-                            )
-                            if draft.id != filteredDrafts.last?.id {
-                                Divider().padding(.leading, 16)
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(filteredDrafts) { draft in
+                                ShortcutRowView(
+                                    draft: draftBinding(for: draft),
+                                    showsShortcut: group.groupType == .shortcuts,
+                                    isHighlighted: highlightedItemID == draft.id,
+                                    focusedItem: $focusedItemID,
+                                    highlight: { highlightedItemID = draft.id },
+                                    delete: { deleteItem(id: draft.id) }
+                                )
+                                .id(draft.id)
+                                if draft.id != filteredDrafts.last?.id {
+                                    Divider().padding(.leading, 16)
+                                }
                             }
+                        }
+                    }
+                    .onChange(of: highlightedItemID) { _, itemID in
+                        guard let itemID else { return }
+                        withAnimation(.easeInOut(duration: 0.12)) {
+                            proxy.scrollTo(itemID, anchor: .center)
                         }
                     }
                 }
             }
+        }
+        .keyboardListNavigation(
+            onMove: moveHighlight,
+            onSubmit: selectHighlightedItemText
+        )
+        .onAppear(perform: ensureValidHighlight)
+        .onChange(of: filteredDrafts.map(\.id)) { _, _ in
+            ensureValidHighlight()
+        }
+        .onChange(of: focusedItemID) { _, itemID in
+            guard let itemID else { return }
+            highlightedItemID = itemID
         }
         .alert("Couldn’t Save Changes", isPresented: Binding(
             get: { errorMessage != nil },
@@ -104,6 +135,7 @@ struct ShortcutListView: View {
         let nextSortOrder = (drafts.map(\.sortOrder).max() ?? -1) + 1
         let draft = ShortcutDraft(sortOrder: nextSortOrder)
         drafts.insert(draft, at: 0)
+        highlightedItemID = draft.id
 
         Task { @MainActor in
             focusedItemID = draft.id
@@ -115,11 +147,61 @@ struct ShortcutListView: View {
         if focusedItemID == id {
             focusedItemID = nil
         }
+        if highlightedItemID == id {
+            highlightedItemID = nil
+        }
         drafts.removeAll { $0.id == id }
 
         guard let item = group.shortcuts.first(where: { $0.id == id }) else { return }
         modelContext.delete(item)
         saveContext(reloadOnFailure: true)
+    }
+
+    private func ensureValidHighlight() {
+        guard filteredDrafts.contains(where: { $0.id == highlightedItemID }) else {
+            highlightedItemID = filteredDrafts.first?.id
+            return
+        }
+    }
+
+    private func moveHighlight(_ direction: KeyboardListNavigationDirection) {
+        guard !filteredDrafts.isEmpty else { return }
+
+        guard let currentIndex = filteredDrafts.firstIndex(where: { $0.id == highlightedItemID }) else {
+            highlightedItemID = direction == .down
+                ? filteredDrafts.first?.id
+                : filteredDrafts.last?.id
+            return
+        }
+
+        switch direction {
+        case .up:
+            let previousIndex = currentIndex == filteredDrafts.startIndex
+                ? filteredDrafts.index(before: filteredDrafts.endIndex)
+                : filteredDrafts.index(before: currentIndex)
+            highlightedItemID = filteredDrafts[previousIndex].id
+        case .down:
+            let nextIndex = filteredDrafts.index(after: currentIndex)
+            highlightedItemID = nextIndex == filteredDrafts.endIndex
+                ? filteredDrafts.first?.id
+                : filteredDrafts[nextIndex].id
+        }
+    }
+
+    private func selectHighlightedItemText() {
+        guard
+            let highlightedItemID,
+            filteredDrafts.contains(where: { $0.id == highlightedItemID })
+        else {
+            return
+        }
+
+        focusedItemID = highlightedItemID
+        Task { @MainActor in
+            await Task.yield()
+            guard focusedItemID == highlightedItemID else { return }
+            NSApp.sendAction(#selector(NSText.selectAll(_:)), to: nil, from: nil)
+        }
     }
 
     private func draftBinding(for fallback: ShortcutDraft) -> Binding<ShortcutDraft> {

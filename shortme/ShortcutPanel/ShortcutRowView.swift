@@ -3,7 +3,9 @@ import SwiftUI
 struct ShortcutRowView: View {
     @Binding var draft: ShortcutDraft
     let showsShortcut: Bool
+    let isHighlighted: Bool
     let focusedItem: FocusState<UUID?>.Binding
+    let highlight: () -> Void
     let delete: () -> Void
 
     var body: some View {
@@ -43,5 +45,8 @@ struct ShortcutRowView: View {
         .padding(.vertical, 8)
         .frame(minHeight: 47)
         .contentShape(Rectangle())
+        .background(isHighlighted ? Color.accentColor.opacity(0.18) : Color.clear)
+        .simultaneousGesture(TapGesture().onEnded(highlight))
+        .accessibilityAddTraits(isHighlighted ? .isSelected : [])
     }
 }

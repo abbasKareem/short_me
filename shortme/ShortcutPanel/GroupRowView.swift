@@ -2,6 +2,7 @@ import SwiftUI
 
 struct GroupRowView: View {
     let group: ShortcutGroup
+    let isHighlighted: Bool
     let open: () -> Void
     let edit: () -> Void
 
@@ -38,5 +39,7 @@ struct GroupRowView: View {
             .foregroundStyle(.secondary)
             .accessibilityLabel("Edit \(group.name)")
         }
+        .background(isHighlighted ? Color.accentColor.opacity(0.18) : Color.clear)
+        .accessibilityAddTraits(isHighlighted ? .isSelected : [])
     }
 }
